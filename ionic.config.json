@@ -1,0 +1,8 @@
+{
+  "name": "ionpickban",
+  "app_id": "eb31b20f",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
