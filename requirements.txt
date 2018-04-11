@@ -1,0 +1,23 @@
+Okay so here's what we are planning tentatively:
+
+all of this is done on one device. 
+
+interface shows a list of all stages.
+
+Team 1 picks 1 stage to ban. Stage is removed from list.
+Team 2 picks 1 stage to ban. Stage is removed from listl.
+---
+Team 2 picks 1 stage (A)
+Team 1 picks 1 stage (B)
+Team 2 picks 1 stage (C)
+Team 2 picks 1 stage (D)
+
+rotation is presented as such:
+A, B, [C/D chosen randomly]
+
+for WF / LF / GF, same thing except 3 picks per team.
+
+Have a toggle-able feature where stages on pick phase can be: 
+1) All unique - resulting in 3 unique maps.
+2) Team Unique - teams can pick maps opponents have picked, but each of their own picks must be unique. so rotation can be A/A/B
+3) All repeats OK - anything can be picked multiple times, so A/A/A can be chosen.

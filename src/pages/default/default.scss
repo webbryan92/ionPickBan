@@ -1,0 +1,15 @@
+ion-col.my-thin-col {
+    flex: 0 0 4px;
+    padding:0;
+    min-width: 156px;
+}
+#overlay{
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}

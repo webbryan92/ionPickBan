@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            Settings
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <form (submit)="setDefaults()">
+        <ion-list>
+            <ion-item>
+                <ion-label fixed>Pick Phase</ion-label>
+                <ion-select [(ngModel)]="category" name="category">
+                    <ion-option value="unique">All Unique</ion-option>
+                    <ion-option value="teamUnique">Team Unique</ion-option>
+                    <ion-option value="repeats">Repeats OK</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>Picks</ion-label>
+                <ion-select [(ngModel)]="picklimit" name="picklimit">
+                    <ion-option value="1">1</ion-option>
+                    <ion-option value="2">2</ion-option>
+                    <ion-option value="3">3</ion-option>
+                    <ion-option value="4">4</ion-option>
+                    <ion-option value="5">5</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>Bans</ion-label>
+                    <ion-select [(ngModel)]="banlimit" name="banlimit">
+                        <ion-option value="1">1</ion-option>
+                        <ion-option value="2">2</ion-option>
+                        <ion-option value="3">3</ion-option>
+                        <ion-option value="4">4</ion-option>
+                        <ion-option value="5">5</ion-option>
+                    </ion-select>
+                </ion-item>
+            <button ion-button type="submit" block>Save Changes</button>
+        </ion-list>
+    </form>
+</ion-content>

@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-navbar>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>Picks/Bans</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content padding>
+    <h3>Pick/Ban</h3>
+    <ion-grid>
+        <ion-row>
+          <ng-container *ngFor="let stage of stages; let i = index">
+            <ion-col padding align-self-start tappable align="center"
+              class = 'my-thin-col'>
+              <!--<a (click)="stage.hideme = !stage.hideme">-->
+              <a (click)="handleClick(stage)">
+                <img 
+                width="128" height="128" 
+                src= "{{stage.imgsrc}}"                           
+                onerror="this.src = `assets/imgs/logo.png`" ></a>
+                <ng-container *ngIf="banphase">
+                  <div [hidden]="!stage.hideme" align="center">Banned</div>
+                </ng-container>
+                <ng-container *ngIf="pickphase">
+                    <div [hidden]="!stage.hideme" align="center">Selected</div>
+                </ng-container>
+              <p>{{stage.name}}</p>
+              <p>{{stage.jpname}}</p>
+            </ion-col>
+          </ng-container>
+        </ion-row>
+      </ion-grid>
+  
+    <button ion-button secondary menuToggle>Toggle Menu</button>
+  </ion-content>
+  
