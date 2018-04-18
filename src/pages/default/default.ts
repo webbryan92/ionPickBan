@@ -8,7 +8,7 @@ import { STAGES } from '../../services/storage';
 })
 export class DefaultPage {
   phaseCount:any;
-  turn:any;
+  //turn:any;
   stages = STAGES;
   pickphase: any = "ban";
   picknumber: any = "A";
