@@ -19,14 +19,6 @@
           <ng-container *ngIf="phase(stage.phase)">
             <div [hidden]="!stage.hideme" align="center">{{stage.pickNum}}</div>
           </ng-container>
-          <!--
-            
-            <ng-container *ngIf="banphase">
-              <div [hidden]="!stage.hideme" align="center">Banned</div>
-            </ng-container>
-            <ng-container *ngIf="pickphase">
-                <div [hidden]="!stage.hideme" align="center">Selected</div>
-            </ng-container>-->
           <p>{{stage.name}}</p>
           <p>{{stage.jpname}}</p>
         </ion-col>
