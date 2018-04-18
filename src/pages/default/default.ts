@@ -11,37 +11,61 @@ export class DefaultPage {
   turn:any;
   stages = STAGES;
   pickphase: any = "ban";
-  //banphase: any = "";
+  picknumber: any = "A";
   count: any = 0;
+  undo: any = 0;
+  undoIndex: any;
   constructor(public navCtrl: NavController) {
 
   }
-  /*handleClick(stage){
-    stage.hideme = !stage.hideme;
-    this.count = this.count+1;
-    this.pickBanTurn();
-  }
-  pickBanTurn(){
-    if(this.count > 2){
-      this.banphase = false;
-      this.pickphase = true;
-    }
-  }*/
-  handleClick(stage){
-    stage.hideme = !stage.hideme;
-    stage.phase = this.pickphase;
-    this.count = this.count+1;
-    this.pickBanTurn();
+  handleClick(stage, index){
+    if(!this.outOfBounds(this.picknumber)){
+      this.count = this.count+1;    
+      this.pickBanTurn();    
+      stage.phase = this.pickphase; 
+      if(stage.phase === "ban"){
+        this.removeItem(stage, index);
+      }
+      else{
+        stage.pickNum = this.picknumber;
+        this.picknumber = this.nextChar(this.picknumber);
+      }    
+      stage.hideme = !stage.hideme;  
+    }     
   }
   pickBanTurn(){
     if(this.count > 2){
       this.pickphase = "pick";
     }
   }
-  /*public on(index) {
-    document.getElementById("overlayText_{{index}}").style.display = "block";
+  removeItem(stage, index){
+    this.undo = stage;
+    this.stages.splice(index, 1);
+    this.undoIndex = index;     
   }
-  public off() {
-    document.getElementById("overlayText_{{index}}").style.display = "none";
-  }*/
+  restoreElement(){
+    if(this.undo !== 0){
+      this.stages.splice(this.undoIndex, 0, this.undo);
+    }
+    this.count = this.count--    
+  }
+  phase(phase){
+    if(phase === "pick"){
+      return true;
+    }
+  }
+  nextChar(c){
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+  }
+  outOfBounds(p){
+    if(p > "D"){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  reset(){
+    location.reload();
+  }
 }

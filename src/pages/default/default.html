@@ -13,16 +13,11 @@
     <ion-row>
       <ng-container *ngFor="let stage of stages; let i = index">
         <ion-col padding align-self-start tappable align="center" class='my-thin-col'>
-          <div (click)="handleClick(stage)">
+          <div (click)="handleClick(stage, i)">
             <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`">
           </div>
-          <ng-container [ngSwitch]="stage.phase">
-            <ng-container *ngSwitchCase="ban">
-              <div [hidden]="!stage.hideme" align="center">Banned</div>
-            </ng-container>
-            <ng-container *ngSwitchCase="pick">
-              <div [hidden]="!stage.hideme" align="center">Selected</div>
-            </ng-container>
+          <ng-container *ngIf="phase(stage.phase)">
+            <div [hidden]="!stage.hideme" align="center">{{stage.pickNum}}</div>
           </ng-container>
           <!--
             
@@ -40,4 +35,6 @@
   </ion-grid>
 
   <button ion-button secondary menuToggle>Toggle Menu</button>
+  <button ion-button secondary (click) = "restoreElement()">Undo</button>
+  <button ion-button secondary (click) = "reset()">Reset</button>
 </ion-content>
