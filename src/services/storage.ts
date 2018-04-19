@@ -75,7 +75,7 @@ export const STAGES: Stage[] = [
     },
     { 
         stageId: 11,
-        name: 'InsstageIde Colony Laser',
+        name: 'Inside Colony Laser',
         jpname: 'コロニーレーザー内部',
         imgsrc: 'assets/imgs/colonyLaser.png'
     },
