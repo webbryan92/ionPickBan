@@ -67,7 +67,7 @@ export class DefaultPage {
         }
         break;
       case 'teamUnique':
-        if (!this.outOfBounds(this.picknumber) && !this.used(stage)) {
+        if (!this.outOfBounds(this.picknumber) && !this.teamUsed(stage)) {
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
@@ -77,13 +77,26 @@ export class DefaultPage {
             this.removeItem(stage, index);
             this.undoIndex = index;
           }
-          stage.pickNum = this.picknumber;
-          this.picknumber = this.nextChar(this.picknumber);
-          stage.used = true;
-          this.undo = stage;
-          this.undoIndex = index;
-
-          stage.hideme = !stage.hideme;
+          else if(this.checkTurn(stage)) {
+            if(stage.pickNum == null){              
+              stage.pickNum = this.teamTurn;
+            }
+            else{
+              stage.pickNum = stage.pickNum + ' ' + this.teamTurn;
+            }
+            this.picknumber = this.nextChar(this.picknumber);            
+            this.undo = stage;
+            this.undoIndex = index;
+            if(this.teamTurn == '1'){
+              stage.team1Used = true;
+            }
+            if(this.teamTurn == '2'){
+              stage.team2Used = true;
+            }
+          }  
+          if(stage.hideme == null){
+            stage.hideme = !stage.hideme;
+          }          
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
@@ -156,7 +169,6 @@ export class DefaultPage {
             if (this.undo !== 0) {
               this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
             }
-            //this.undo.hideme = !this.undo.hideme;
             this.count = this.count - 1;
             this.allowUndo = false;
             //set turn back
@@ -178,6 +190,17 @@ export class DefaultPage {
         }
         break;
     }
+  }
+  checkTurn(stage) {
+    if(this.teamTurn == '1' && stage.team1Used === true){
+      return false;
+    }
+    else if(this.teamTurn == '2' && stage.team2Used === true){
+      return false;
+    }
+    else {
+      return true;
+    }    
   }
   pickBanTurn() {
     if (this.count > 2) {
@@ -211,6 +234,14 @@ export class DefaultPage {
   }
   used(stage) {
     if (stage.used) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  teamUsed(stage){
+    if(stage.teamUsed === this.teamTurn){
       return true;
     }
     else {
