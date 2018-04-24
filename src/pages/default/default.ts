@@ -20,7 +20,7 @@ export class DefaultPage {
   turnIndex: any = 0;
   teamTurn: any = this.turns[0];
   allowUndo: boolean;
-  
+
   constructor(public navCtrl: NavController) {
     this.getDefaults();
   }
@@ -52,16 +52,15 @@ export class DefaultPage {
           if (stage.phase === "ban") {
             this.undo = stage;
             this.removeItem(stage, index);
-            this.undoIndex = index;
-          }else {
+            this.undoIndex = index;            
+          } else {
             stage.pickNum = this.picknumber;
             this.picknumber = this.nextChar(this.picknumber);
             stage.used = true;
             this.undo = stage;
             this.undoIndex = index;
           }
-
-          stage.hideme = !stage.hideme;
+          stage.hideme = !stage.hideme;      
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
@@ -109,10 +108,10 @@ export class DefaultPage {
               stage.pickNum = stage.pickNum + ' ' + this.picknumber;
               this.picknumber = this.nextChar(this.picknumber);
             }
-            stage.used = true;
+            //stage.used = true;
             this.undo = stage;
             this.undoIndex = index;
-          }          
+          }
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
@@ -121,6 +120,65 @@ export class DefaultPage {
     }
 
   }
+  restoreElement() {
+    switch (this.category) {
+      case 'unique': //ban 2 then select a stage breaks
+        if (this.allowUndo) {
+          if (this.pickphase == "ban") {
+            if (this.undo !== 0) {
+              this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
+            }
+            this.count = this.count - 1;
+            this.allowUndo = false;
+            this.undo.hideme = !this.undo.hideme;
+            //set turn back
+            this.turnIndex = this.turnIndex - 1;
+            this.handleTurn();
+          }
+          else {
+            this.picknumber = this.prevChar(this.picknumber); //set pick number back from ex. "B" to "A"
+            this.undo.pickNum = null;                         //take away pickNum given
+            this.undo.phase = null;                           //??
+            this.undo.used = false;                           //flag item as unused
+            this.undo.hideme = !this.undo.hideme;             //flip the hidden text property to re-hide
+            this.count = this.count - 1;                      //reduce count of actions for determining pick/ban
+            this.allowUndo = false;                           //Don't allow another undo
+            this.turnIndex = this.turnIndex - 1;              //reset the index of whose turn it is.
+            this.handleTurn();                                //undo turn order
+          }
+        }
+        break;
+      case 'teamUnique':
+        break;
+      case 'repeats':
+        if (this.allowUndo) {
+          if (this.pickphase == "ban") {
+            if (this.undo !== 0) {
+              this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
+            }
+            //this.undo.hideme = !this.undo.hideme;
+            this.count = this.count - 1;
+            this.allowUndo = false;
+            //set turn back
+            this.turnIndex = this.turnIndex - 1;
+            this.handleTurn();
+          }
+          else {
+            this.picknumber = this.prevChar(this.picknumber);
+            this.undo.pickNum = this.undo.pickNum.substring(0, this.undo.pickNum.indexOf(this.picknumber));
+            //this.undo.used = false;
+            if(this.picknumber == null){
+              this.undo.hideme = !this.undo.hideme;
+            }
+            this.count = this.count - 1;
+            this.allowUndo = false;
+            this.turnIndex = this.turnIndex - 1;
+            this.handleTurn();
+          }
+        }
+        break;
+    }
+  }
   pickBanTurn() {
     if (this.count > 2) {
       this.pickphase = "pick";
@@ -128,30 +186,6 @@ export class DefaultPage {
   }
   removeItem(stage, index) {
     this.stages.splice(index, 1);
-  }
-  restoreElement() {
-    if (this.allowUndo) {
-      if (this.pickphase == "ban") {
-        if (this.undo !== 0) {
-          this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
-        }
-        this.count = this.count - 1;
-        this.allowUndo = false;
-        //set turn back
-        this.turnIndex = this.turnIndex - 1;
-        this.handleTurn();
-      }
-      else {
-        this.picknumber = this.prevChar(this.picknumber); //set pick number back from ex. "B" to "A"
-        this.undo.pickNum = null;                         //take away pickNum given(uncessary?)
-        this.undo.used = false;                           //flag item as unused
-        this.undo.hideme = !this.undo.hideme;             //flip the hidden text property to re-hide
-        this.count = this.count - 1;                      //reduce count of actions for determining pick/ban
-        this.allowUndo = false;                           //Don't allow another undo
-        this.turnIndex = this.turnIndex - 1;              //reset the index of whose turn it is.
-        this.handleTurn();                                //undo turn order
-      }
-    }
   }
   phase(phase) {
     if (phase === "pick") {
