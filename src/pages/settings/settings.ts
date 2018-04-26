@@ -8,8 +8,8 @@ import { DefaultPage } from '../default/default';
 })
 export class SettingsPage {
     category: any;
-    /*picklimit: any;
-    banlimit*/
+    picklimit: any;
+    /*banlimit*/
     constructor(public navCtrl: NavController) {
         this.getDefaults();
     }
@@ -19,12 +19,12 @@ export class SettingsPage {
         } else {
             this.category = 'unique';
         }
-        /*if (localStorage.getItem('picklimit') != null) {
+        if (localStorage.getItem('picklimit') != null) {
             this.picklimit = localStorage.getItem('picklimit');
         } else {
             this.picklimit = 2;
         }
-        if (localStorage.getItem('banlimit') != null) {
+        /*if (localStorage.getItem('banlimit') != null) {
             this.banlimit = localStorage.getItem('banlimit');
         } else {
             this.banlimit = 2;
@@ -32,7 +32,7 @@ export class SettingsPage {
     }
     setDefaults() {
         localStorage.setItem('category', this.category);
-        //localStorage.setItem('picklimit', this.picklimit);
+        localStorage.setItem('picklimit', this.picklimit);
         //localStorage.setItem('banlimit', this.picklimit);
         this.navCtrl.push(DefaultPage);
     }

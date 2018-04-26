@@ -12,10 +12,10 @@
   <h4>
     <ng-container [ngSwitch]= "teamTurn">
       <ng-container *ngSwitchCase="1">
-        <div [hidden]="!teamTurn == '1'" align="center">Team 1</div>
+        <div [hidden]="!teamTurn == '1'" align="center">Team 1 Pick</div>
       </ng-container>
       <ng-container *ngSwitchCase="2">
-        <div [hidden]="!teamTurn == '2'" align="center">Team 2</div>
+        <div [hidden]="!teamTurn == '2'" align="center">Team 2 Pick</div>
       </ng-container>
     </ng-container>
   </h4>
