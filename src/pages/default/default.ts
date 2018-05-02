@@ -33,16 +33,8 @@ export class DefaultPage {
     }
   }
   getDefaults() {
-    if (localStorage.getItem('category') != null) {
-      this.category = localStorage.getItem('category');
-    } else {
-      this.category = 'unique';
-    }
-    if (localStorage.getItem('picklimit') != null) {
-      this.picklimit = localStorage.getItem('picklimit');
-    } else {
-      this.picklimit = 2;
-    }
+    this.category = localStorage.getItem('category') || 'unique';
+    this.picklimit = localStorage.getItem('picklimit') || 2;
     /*if (localStorage.getItem('banlimit') != null) {
         this.banlimit = localStorage.getItem('banlimit');
     } else {
@@ -76,7 +68,6 @@ export class DefaultPage {
         break;
       case 'teamUnique':
         if (!this.outOfBounds(this.picknumber) && !this.teamUsed(stage)) {
-          console.log('you suck with if statements in JS');
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
@@ -88,21 +79,21 @@ export class DefaultPage {
           }
           else if (this.checkTurn(stage)) {
             if (stage.pickNum == null) {
-              stage.pickNum = this.teamTurn;
+              stage.pickNum = this.teamTurn.toString();
               stage.hideme = !stage.hideme;
             }
             else {
               stage.pickNum = stage.pickNum + ' ' + this.teamTurn;
             }
-            this.picknumber = this.nextChar(this.picknumber);
-            this.undo = stage;
-            this.undoIndex = index;
+            this.picknumber = this.nextChar(this.picknumber);            
             if (this.teamTurn == '1') {
               stage.team1Used = true;
             }
             if (this.teamTurn == '2') {
               stage.team2Used = true;
             }
+            this.undo = stage;
+            this.undoIndex = index;
           }//switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
@@ -183,14 +174,8 @@ export class DefaultPage {
           else {
             //console.log(this.undo.hideme);
             this.picknumber = this.prevChar(this.picknumber);
-            console.log(this.undo.pickNum);
-            console.log(this.undo.pickNum.indexOf('1'));
-            console.log(this.undo.pickNum.indexOf('2'));
             if (this.undo.pickNum.indexOf('1') !== -1 && this.undo.pickNum.indexOf('2') !== -1) {
-              console.log('I am here');
-              console.log(this.turns[this.turnIndex])
               this.undo.pickNum = this.turns[this.turnIndex];
-              console.log(this.undo.pickNum)
               if (this.undo.pickNum.indexOf('1') === -1) {
                 this.undo.team1Used = null;
               }
@@ -336,19 +321,10 @@ export class DefaultPage {
     }
   }
   teamUsed(stage) {
-    if ((this.teamTurn == '1' && stage.team1Used) || (this.teamTurn == '2' && stage.team2Used)) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return (this.teamTurn == '1' && stage.team1Used === true) ||
+       (this.teamTurn =='2' && stage.team2Used === true)
   }
   handleTurn() { //sets the html display variable
-    if (this.turns[this.turnIndex] == "1") {
-      this.teamTurn = "1";
-    }
-    else {
-      this.teamTurn = "2";
-    }
+    this.turns[this.turnIndex] == "1" ? this.teamTurn = 1 : this.teamTurn = 2
   }
 }
