@@ -21,6 +21,7 @@ export class DefaultPage {
   turnIndex: any = 0;
   teamTurn: any;
   allowUndo: boolean;
+  queue = [];
 
   constructor(public navCtrl: NavController) {
     this.getDefaults();
@@ -64,7 +65,10 @@ export class DefaultPage {
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
-        }
+          /*if(this.outOfBounds(this.picknumber)){
+            this.queue = this.stages.filter(stage => stage.pickNum);
+          }*/
+        }        
         break;
       case 'teamUnique':
         if (!this.outOfBounds(this.picknumber) && !this.teamUsed(stage)) {
