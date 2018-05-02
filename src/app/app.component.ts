@@ -4,7 +4,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { DefaultPage } from '../pages/default/default';
-import { SettingsPage } from '../pages/settings/settings'
+import { SettingsPage } from '../pages/settings/settings';
+import { ResultsPage } from '../pages/results/results';
 
 @Component({
   templateUrl: 'app.html'

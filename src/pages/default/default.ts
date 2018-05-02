@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 import { STAGES } from '../../services/storage';
+
+import { ResultsPage } from '../results/results';
 
 @Component({
   selector: 'page-default',
@@ -21,9 +24,9 @@ export class DefaultPage {
   turnIndex: any = 0;
   teamTurn: any;
   allowUndo: boolean;
-  queue = [];
+  results = [];
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private alertCtrl: AlertController) {
     this.getDefaults();
     if (this.picklimit == 2) {
       this.turns = ["1", "2", "2", "1", "2", "1"];
@@ -32,6 +35,7 @@ export class DefaultPage {
       this.turns = ["1", "2", "2", "1", "2", "1", "2", "1"];
       this.teamTurn = this.turns[0];
     }
+    this.allowUndo = false;
   }
   getDefaults() {
     this.category = localStorage.getItem('category') || 'unique';
@@ -60,14 +64,15 @@ export class DefaultPage {
             stage.used = true;
             this.undo = stage;
             this.undoIndex = index;
+            this.addToResults(stage);
           }
           stage.hideme = !stage.hideme;
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
-          /*if(this.outOfBounds(this.picknumber)){
-            this.queue = this.stages.filter(stage => stage.pickNum);
-          }*/
+          if(this.outOfBounds(this.picknumber)){
+            this.presentConfirm();            
+          }      
         }        
         break;
       case 'teamUnique':
@@ -98,9 +103,13 @@ export class DefaultPage {
             }
             this.undo = stage;
             this.undoIndex = index;
+            this.addToResults(stage);
           }//switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
+          if(this.outOfBounds(this.picknumber)){
+            this.presentConfirm();            
+          }  
         }
         break;
       case 'repeats':
@@ -125,10 +134,14 @@ export class DefaultPage {
             //stage.used = true;
             this.undo = stage;
             this.undoIndex = index;
+            this.addToResults(stage);
           }
           //switch team
           this.turnIndex = this.turnIndex + 1;
-          this.handleTurn();
+          this.handleTurn(); 
+          if(this.outOfBounds(this.picknumber)){
+            this.presentConfirm();                   
+          }           
         }
         break;
     }
@@ -147,7 +160,7 @@ export class DefaultPage {
             this.undo.hideme = !this.undo.hideme;
             //set turn back
             this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();
+            this.handleTurn();            
           }
           else {
             this.picknumber = this.prevChar(this.picknumber); //set pick number back from ex. "B" to "A"
@@ -159,6 +172,7 @@ export class DefaultPage {
             this.allowUndo = false;                           //Don't allow another undo
             this.turnIndex = this.turnIndex - 1;              //reset the index of whose turn it is.
             this.handleTurn();                                //undo turn order
+            this.undoResults();
           }
         }
         break;
@@ -173,7 +187,7 @@ export class DefaultPage {
             //this.undo.hideme = !this.undo.hideme;
             //set turn back
             this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();
+            this.handleTurn();            
           }
           else {
             //console.log(this.undo.hideme);
@@ -185,10 +199,9 @@ export class DefaultPage {
               }
               if (this.undo.pickNum.indexOf('2') === -1) {
                 this.undo.team2Used = null;
-              }
+              }              
             }
             else if (this.undo.pickNum.indexOf('1') !== -1) {
-              console.log('I shouldn\'t be here');
               this.undo.pickNum = null;
               this.undo.team1Used = null;
               if (this.undo.pickNum == null) {
@@ -196,7 +209,6 @@ export class DefaultPage {
               }
             }
             else if (this.undo.pickNum.indexOf('2') !== -1) {
-              console.log('I shouldn\'t be here');
               this.undo.pickNum = null;
               this.undo.team2Used = null;
               if (this.undo.pickNum == null) {
@@ -217,6 +229,7 @@ export class DefaultPage {
             this.turnIndex = this.turnIndex - 1;
             //console.log(this.undo.hideme);
             this.handleTurn();
+            this.undoResults();
           }
         }
         break;
@@ -244,10 +257,34 @@ export class DefaultPage {
             this.allowUndo = false;
             this.turnIndex = this.turnIndex - 1;
             this.handleTurn();
+            this.undoResults();
           }
         }
         break;
     }
+  }
+  presentConfirm() {
+    let alert = this.alertCtrl.create({
+      title: 'Confirm Selection',
+      message: '',
+      buttons: [
+        {
+          text: 'Undo',
+          role: 'undo',
+          handler: () => {
+            this.restoreElement();
+          }
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.allowUndo = false;
+            this.navCtrl.push(ResultsPage, {results:this.results});
+          }
+        }
+      ]
+    });
+    alert.present();
   }
   checkTurn(stage) {
     if (this.teamTurn == '1' && stage.team1Used === true) {
@@ -267,6 +304,12 @@ export class DefaultPage {
   }
   removeItem(stage, index) {
     this.stages.splice(index, 1);
+  }
+  addToResults(stage) {
+    this.results.push(stage);
+  }
+  undoResults(){
+    this.results.pop();
   }
   phase(phase) {
     if (phase === "pick") {

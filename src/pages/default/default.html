@@ -36,7 +36,13 @@
     </ion-row>
   </ion-grid>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
-  <button ion-button secondary (click) = "restoreElement()">Undo</button>
-  <button ion-button secondary (click) = "reset()">Reset</button>
+  <button ion-button menuToggle>Toggle Menu</button>
+  <ng-container *ngIf="allowUndo">
+    <button ion-button (click) = "restoreElement()">Undo</button>
+  </ng-container>
+  <ng-container *ngIf="!allowUndo">
+    <button ion-button color = "danger">Undo</button>
+  </ng-container>
+  
+  <button ion-button (click) = "reset()">Reset</button>
 </ion-content>

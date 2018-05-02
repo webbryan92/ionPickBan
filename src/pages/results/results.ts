@@ -1,39 +1,38 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { DefaultPage } from '../default/default';
+import { NavParams } from 'ionic-angular';
 
 @Component({
-    selector: 'settings',
-    templateUrl: 'settings.html'
+    selector: 'results',
+    templateUrl: 'results.html'
 })
-export class SettingsPage {
-    category: any;
-    picklimit: any;
-    /*banlimit*/
-    constructor(public navCtrl: NavController) {
-        this.getDefaults();
+export class ResultsPage {
+    stages: any;
+    randomized: any;
+    constructor(public navCtrl: NavController, public params: NavParams) {
+        this.params = params;
+        this.stages = params.data.results;
+        this.splitStages(this.stages);
     }
-    getDefaults() {
-        if (localStorage.getItem('category') != null) {
-            this.category = localStorage.getItem('category');
-        } else {
-            this.category = 'unique';
-        }
-        if (localStorage.getItem('picklimit') != null) {
-            this.picklimit = localStorage.getItem('picklimit');
-        } else {
-            this.picklimit = 2;
-        }
-        /*if (localStorage.getItem('banlimit') != null) {
-            this.banlimit = localStorage.getItem('banlimit');
-        } else {
-            this.banlimit = 2;
-        }*/
+    splitStages(stages) {
+        this.randomized = stages.splice(-2, 2);
+        this.shuffleArray(this.randomized);
+        this.stages = this.stages.concat(this.randomized)
     }
-    setDefaults() {
-        localStorage.setItem('category', this.category);
-        localStorage.setItem('picklimit', this.picklimit);
-        //localStorage.setItem('banlimit', this.picklimit);
-        this.navCtrl.push(DefaultPage);
+    // -> Fisher–Yates shuffle algorithm
+    shuffleArray(array) {
+        var m = array.length, t, i;
+        // While there remain elements to shuffle
+        while (m) {
+            // Pick a remaining element…
+            i = Math.floor(Math.random() * m--);
+
+            // And swap it with the current element.
+            t = array[m];
+            array[m] = array[i];
+            array[i] = t;
+        }
+        return array;
     }
 }
+

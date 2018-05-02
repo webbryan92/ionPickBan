@@ -35,5 +35,6 @@ export class SettingsPage {
         localStorage.setItem('picklimit', this.picklimit);
         //localStorage.setItem('banlimit', this.picklimit);
         this.navCtrl.push(DefaultPage);
+        location.reload();
     }
 }
