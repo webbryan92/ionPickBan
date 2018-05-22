@@ -4,9 +4,10 @@ page-results{
         align-self: center;
         flex: 0 0 90px;
         padding: 10px, 10px, 10px, 0px;
-        margin: 0px;
+        margin: 5px;
         background: lightgrey;
-        height: 250px;
+        height: 270px;
+        border-radius: 10px;
     }
     #overlay{
         position: absolute;
@@ -18,21 +19,33 @@ page-results{
         transform: translate(-50%,-50%);
         -ms-transform: translate(-50%,-50%);
     }
+    .resultformat {
+        border: 2px solid black;
+        border-radius: 2px;
+        background: lightcoral;
+        padding: 0px;
+        margin: 10px 10px 0px 10px;
+    }
     .pickformat {
         border: 2px solid black;
-        background: red;
+        border-radius: 2px;
+        background: lightcoral;
         padding: 0px;
-        margin: 0px;
+        margin: 0px 10px 0px 10px;
     }
     .stagename {
         border: 2px solid black;
-        background: red;
+        background: lightcoral;
         padding: 0px;
         margin: 0px;
     }
     .stageimg {
+        margin-top: 0px;
         margin-bottom: 0px;
+        padding-top: 0px;
         padding-bottom: 0px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 4px grey;
     }
     img {
         display: block;
@@ -40,5 +53,24 @@ page-results{
         max-height:128px;
         width: auto;
         height: auto;
-    }
+        margin: 10px 10px 10px 10px;
+      }
+      .content {
+          background: rgb(236, 236, 236);
+      }
+      .header {
+          background: darkslategray;          
+      }
+      .toFloat {
+          float: left;
+      }
+      ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 90px 1px;
+        width: 98%;
+        height: 100%;
+        text-align: center;
+      }
 }
