@@ -1,15 +1,67 @@
-ion-col.my-thin-col {
-    flex: 0 0 4px;
-    padding:0;
-    min-width: 156px;
-}
-#overlay{
-    position: absolute;
-    display: none;
-    top: 50%;
-    left: 50%;
-    font-size: 50px;
-    color: white;
-    transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+page-default{
+    ion-col.my-thin-col {
+        align-content: center;
+        align-self: center;
+        flex: 0 0 90px;
+        padding: 10px, 10px, 10px, 0px;
+        margin: 5px;
+        background: lightgrey;
+        height: 250px;
+        border-radius: 10px;
+    }
+    #overlay{
+        position: absolute;
+        display: none;
+        top: 50%;
+        left: 50%;
+        font-size: 50px;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+    }
+    .pickformat {
+        border: 2px solid black;
+        border-radius: 2px;
+        background: lightcoral;
+        padding: 0px;
+        margin: 0px 10px 0px 10px;
+    }
+    .stagename {
+        border: 2px solid black;
+        background: lightcoral;
+        padding: 0px;
+        margin: 0px;
+    }
+    .stageimg {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 4px grey;
+    }
+    img {
+        display: block;
+        max-width:128px;
+        max-height:128px;
+        width: auto;
+        height: auto;
+        margin: 10px 10px 10px 10px;
+      }
+      .content {
+          background: rgb(236, 236, 236);
+      }
+      .header {
+          background: darkslategray;          
+      }
+      .toFloat {
+          float: left;
+      }
+      ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 90px 1px;
+        width: 98%;
+        height: 100%;
+        text-align: center;
+      }
 }

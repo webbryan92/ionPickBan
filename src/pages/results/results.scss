@@ -1,0 +1,44 @@
+page-results{
+    ion-col.my-thin-col {
+        align-content: center;
+        align-self: center;
+        flex: 0 0 90px;
+        padding: 10px, 10px, 10px, 0px;
+        margin: 0px;
+        background: lightgrey;
+        height: 250px;
+    }
+    #overlay{
+        position: absolute;
+        display: none;
+        top: 50%;
+        left: 50%;
+        font-size: 50px;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+    }
+    .pickformat {
+        border: 2px solid black;
+        background: red;
+        padding: 0px;
+        margin: 0px;
+    }
+    .stagename {
+        border: 2px solid black;
+        background: red;
+        padding: 0px;
+        margin: 0px;
+    }
+    .stageimg {
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    img {
+        display: block;
+        max-width:128px;
+        max-height:128px;
+        width: auto;
+        height: auto;
+    }
+}

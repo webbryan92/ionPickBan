@@ -2,13 +2,19 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
 
+import { ViewChild } from '@angular/core';
+import { Navbar } from 'ionic-angular';
+
 @Component({
-    selector: 'results',
+    selector: 'page-results',
     templateUrl: 'results.html'
 })
 export class ResultsPage {
+    @ViewChild(Navbar) navBar: Navbar; //initializing navbar button
     stages: any;
     randomized: any;
+    pickSequ = 1;
+    returnNum: any;
     constructor(public navCtrl: NavController, public params: NavParams) {
         this.params = params;
         this.stages = params.data.results;
@@ -34,5 +40,17 @@ export class ResultsPage {
         }
         return array;
     }
+    pickOrder(){
+        this.returnNum = this.pickSequ;
+        this.pickSequ++;
+        return this.returnNum;
+    }
+    ionViewDidLoad() {  //overriding back button
+        this.navBar.backButtonClick = (e:UIEvent)=>{
+         // todo something         
+         this.navCtrl.pop();
+         location.reload();
+        }
+      }
 }
 

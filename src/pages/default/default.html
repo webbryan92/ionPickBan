@@ -1,14 +1,13 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
+  <ion-navbar class="header">
+    <button ion-button menuToggle >
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Picks/Bans</ion-title>
+    <ion-title align="center">Picks/Bans</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3 align ="center">Pick/Ban</h3>
+<ion-content padding class="content">
   <h4>
     <ng-container [ngSwitch]= "teamTurn">
       <ng-container *ngSwitchCase="1">
@@ -20,22 +19,24 @@
     </ng-container>
   </h4>
   <ion-grid>
-    <ion-row>
+    <ion-row justify-content-center>
       <ng-container *ngFor="let stage of stages; let i = index">
-        <ion-col padding align-self-start tappable align="center" class='my-thin-col'>
+        <ion-col tappable align="center" class='my-thin-col'>
           <div (click)="handleClick(stage, i)">
-            <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`">
+            <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`" class="stageimg">
           </div>
           <ng-container *ngIf="phase(stage.phase)">
-            <div [hidden]="!stage.hideme" align="center">{{stage.pickNum}}</div>
+            <div [hidden]="!stage.hideme" align="center" class="pickformat">{{stage.pickNum}}</div>
           </ng-container>
-          <p>{{stage.name}}</p>
-          <p>{{stage.jpname}}</p>
+          <ng-container class="stagename">
+            <p>{{stage.name}}</p>
+            <p>{{stage.jpname}}</p>
+          </ng-container>          
         </ion-col>
       </ng-container>
     </ion-row>
   </ion-grid>
-
+  <div align="center">
   <button ion-button menuToggle>Toggle Menu</button>
   <ng-container *ngIf="allowUndo">
     <button ion-button (click) = "restoreElement()">Undo</button>
@@ -45,4 +46,5 @@
   </ng-container>
   
   <button ion-button (click) = "reset()">Reset</button>
+</div>
 </ion-content>
