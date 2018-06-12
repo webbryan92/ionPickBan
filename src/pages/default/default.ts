@@ -286,6 +286,27 @@ export class DefaultPage {
     });
     alert.present();
   }
+  resetConfirm() {
+    let alert = this.alertCtrl.create({
+      title: 'Reset?',
+      message: '',
+      buttons: [
+        {
+          text: 'No',
+          role: 'no',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            this.reset();
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
   checkTurn(stage) {
     if (this.teamTurn == '1' && stage.team1Used === true) {
       return false;

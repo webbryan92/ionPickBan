@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
 
 import { ViewChild } from '@angular/core';
@@ -15,7 +16,7 @@ export class ResultsPage {
     randomized: any;
     pickSequ = 1;
     returnNum: any;
-    constructor(public navCtrl: NavController, public params: NavParams) {
+    constructor(public navCtrl: NavController, public params: NavParams, private alertCtrl: AlertController) {
         this.params = params;
         this.stages = params.data.results;
         this.splitStages(this.stages);
@@ -46,9 +47,27 @@ export class ResultsPage {
         return this.returnNum;
     }
     closeButton() {         
-        // todo something         
-         this.navCtrl.pop();
-         location.reload();
+        // todo something 
+        let alert = this.alertCtrl.create({
+            title: 'Return to pick screen and reset?',
+            message: '',
+            buttons: [
+              {
+                text: 'cancel',
+                role: 'cancel',
+                handler: () => {                  
+                }
+              },
+              {
+                text: 'Return',
+                handler: () => {
+                    this.navCtrl.pop();
+                    location.reload();
+                }
+              }
+            ]
+          });
+        alert.present();
     }
 }
 

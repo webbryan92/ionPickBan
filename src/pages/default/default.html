@@ -8,26 +8,28 @@
 </ion-header>
 
 <ion-content padding class="content">
-  <h4>
+  <h1>
     <ng-container [ngSwitch]= "teamTurn">
       <ng-container *ngSwitchCase="1">
-        <div [hidden]="!teamTurn == '1'" align="center">Team 1 Pick</div>
+        <div [hidden]="!teamTurn == '1'" align="center" class ="t1">Team 1 Pick</div>
       </ng-container>
       <ng-container *ngSwitchCase="2">
-        <div [hidden]="!teamTurn == '2'" align="center">Team 2 Pick</div>
+        <div [hidden]="!teamTurn == '2'" align="center" class ="t2">Team 2 Pick</div>
       </ng-container>
     </ng-container>
-  </h4>
+  </h1>
   <ion-grid>
     <ion-row justify-content-center>
       <ng-container *ngFor="let stage of stages; let i = index">
         <ion-col tappable align="center" class='my-thin-col'>
-          <div (click)="handleClick(stage, i)">
-            <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`" class="stageimg">
-          </div>
-          <ng-container *ngIf="phase(stage.phase)">
-            <div [hidden]="!stage.hideme" align="center" class="pickformat">{{stage.pickNum}}</div>
-          </ng-container>
+          <figure>
+              <div (click)="handleClick(stage, i)">
+                  <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`" class="stageimg">
+                </div>
+                <ng-container *ngIf="phase(stage.phase)">
+                  <figcaption [hidden]="!stage.hideme" align="center" class="pickformat">{{stage.pickNum}}</figcaption>
+                </ng-container>
+          </figure>          
           <ng-container class="stagename">
             <p>{{stage.name}}</p>
             <p>{{stage.jpname}}</p>
@@ -45,6 +47,6 @@
     <button ion-button color = "danger">Undo</button>
   </ng-container>
   
-  <button ion-button (click) = "reset()">Reset</button>
+  <button ion-button (click) = "resetConfirm()">Reset</button>
 </div>
 </ion-content>
