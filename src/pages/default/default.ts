@@ -28,6 +28,7 @@ export class DefaultPage {
 
   constructor(public navCtrl: NavController, private alertCtrl: AlertController) {
     this.getDefaults();
+    //set the appropriate turn order based on default picklimit
     if (this.picklimit == 2) {
       this.turns = ["1", "2", "2", "1", "2", "1"];
       this.teamTurn = this.turns[0];
@@ -35,21 +36,19 @@ export class DefaultPage {
       this.turns = ["1", "2", "2", "1", "2", "1", "2", "1"];
       this.teamTurn = this.turns[0];
     }
+    //default allowUndo to false
     this.allowUndo = false;
   }
   getDefaults() {
+    //get the default values from localStorage
     this.category = localStorage.getItem('category') || 'unique';
     this.picklimit = localStorage.getItem('picklimit') || 2;
-    /*if (localStorage.getItem('banlimit') != null) {
-        this.banlimit = localStorage.getItem('banlimit');
-    } else {
-        this.banlimit = 2;
-    }*/    
   }
+  //handle click on any of the 
   handleClick(stage, index) {
     switch (this.category) {
       case 'unique':
-        if (!this.outOfBounds(this.picknumber) && !this.used(stage)) {
+        if (!this.outOfBounds(this.picknumber) && !stage.used) {
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
@@ -70,10 +69,10 @@ export class DefaultPage {
           //switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
-          if(this.outOfBounds(this.picknumber)){
-            this.presentConfirm();            
-          }      
-        }        
+          if (this.outOfBounds(this.picknumber)) {
+            this.presentConfirm();
+          }
+        }
         break;
       case 'teamUnique':
         if (!this.outOfBounds(this.picknumber) && !this.teamUsed(stage)) {
@@ -94,7 +93,7 @@ export class DefaultPage {
             else {
               stage.pickNum = stage.pickNum + ' ' + this.teamTurn;
             }
-            this.picknumber = this.nextChar(this.picknumber);            
+            this.picknumber = this.nextChar(this.picknumber);
             if (this.teamTurn == '1') {
               stage.team1Used = true;
             }
@@ -107,12 +106,13 @@ export class DefaultPage {
           }//switch team
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
-          if(this.outOfBounds(this.picknumber)){
-            this.presentConfirm();            
-          }  
+          if (this.outOfBounds(this.picknumber)) {
+            this.presentConfirm();
+          }
         }
         break;
       case 'repeats':
+      //check if the number is out of bounds
         if (!this.outOfBounds(this.picknumber)) {
           this.allowUndo = true;
           this.count = this.count + 1;
@@ -128,6 +128,8 @@ export class DefaultPage {
               this.picknumber = this.nextChar(this.picknumber);
               stage.hideme = !stage.hideme;
             } else {
+              //the updates on the addition to the html property 
+              //has response time issues
               stage.pickNum = stage.pickNum + ' ' + this.picknumber;
               this.picknumber = this.nextChar(this.picknumber);
             }
@@ -138,10 +140,10 @@ export class DefaultPage {
           }
           //switch team
           this.turnIndex = this.turnIndex + 1;
-          this.handleTurn(); 
-          if(this.outOfBounds(this.picknumber)){
-            this.presentConfirm();                   
-          }           
+          this.handleTurn();
+          if (this.outOfBounds(this.picknumber)) {
+            this.presentConfirm();
+          }
         }
         break;
     }
@@ -149,121 +151,26 @@ export class DefaultPage {
   }
   restoreElement() {
     switch (this.category) {
-      case 'unique': //ban 2 then select a stage breaks
+      //based on the pick type setting run the appropriate rules to undo
+      case 'unique':
         if (this.allowUndo) {
-          if (this.pickphase == "ban") {
-            if (this.undo !== 0) {
-              this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
-            }
-            this.count = this.count - 1;
-            this.allowUndo = false;
-            this.undo.hideme = !this.undo.hideme;
-            //set turn back
-            this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();            
-          }
-          else {
-            this.picknumber = this.prevChar(this.picknumber); //set pick number back from ex. "B" to "A"
-            this.undo.pickNum = null;                         //take away pickNum given
-            this.undo.phase = null;                           //??
-            this.undo.used = false;                           //flag item as unused
-            this.undo.hideme = !this.undo.hideme;             //flip the hidden text property to re-hide
-            this.count = this.count - 1;                      //reduce count of actions for determining pick/ban
-            this.allowUndo = false;                           //Don't allow another undo
-            this.turnIndex = this.turnIndex - 1;              //reset the index of whose turn it is.
-            this.handleTurn();                                //undo turn order
-            this.undoResults();
-          }
+          this.undoUnique();
         }
         break;
       case 'teamUnique':
         if (this.allowUndo) {
-          if (this.pickphase == "ban") {
-            if (this.undo !== 0) {
-              this.stages.splice(this.undoIndex, 0, this.undo);
-            }
-            this.count = this.count - 1;
-            this.allowUndo = false;
-            //this.undo.hideme = !this.undo.hideme;
-            //set turn back
-            this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();            
-          }
-          else {
-            //console.log(this.undo.hideme);
-            this.picknumber = this.prevChar(this.picknumber);
-            if (this.undo.pickNum.indexOf('1') !== -1 && this.undo.pickNum.indexOf('2') !== -1) {
-              this.undo.pickNum = this.turns[this.turnIndex];
-              if (this.undo.pickNum.indexOf('1') === -1) {
-                this.undo.team1Used = null;
-              }
-              if (this.undo.pickNum.indexOf('2') === -1) {
-                this.undo.team2Used = null;
-              }              
-            }
-            else if (this.undo.pickNum.indexOf('1') !== -1) {
-              this.undo.pickNum = null;
-              this.undo.team1Used = null;
-              if (this.undo.pickNum == null) {
-                this.undo.hideme = !this.undo.hideme;
-              }
-            }
-            else if (this.undo.pickNum.indexOf('2') !== -1) {
-              this.undo.pickNum = null;
-              this.undo.team2Used = null;
-              if (this.undo.pickNum == null) {
-                this.undo.hideme = !this.undo.hideme;
-              }
-            }
-            else {
-              console.log('I shouldn\'t be here, ever');
-              this.undo.pickNum = null;
-              if (this.undo.pickNum == null) {
-                this.undo.hideme = !this.undo.hideme;
-              }
-            }
-            this.count = this.count - 1;
-            this.allowUndo = false;
-            //this.undo.phase = null;                           //??
-            this.undo.used = false;
-            this.turnIndex = this.turnIndex - 1;
-            //console.log(this.undo.hideme);
-            this.handleTurn();
-            this.undoResults();
-          }
+          this.undoTeamUnique();
         }
         break;
       case 'repeats':
         if (this.allowUndo) {
-          if (this.pickphase == "ban") {
-            if (this.undo !== 0) {
-              this.stages.splice(this.undoIndex, 0, this.undo);
-            }
-            //this.undo.hideme = !this.undo.hideme;
-            this.count = this.count - 1;
-            this.allowUndo = false;
-            //set turn back
-            this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();
-          }
-          else {
-            this.picknumber = this.prevChar(this.picknumber);
-            this.undo.pickNum = this.undo.pickNum.substring(0, this.undo.pickNum.indexOf(this.picknumber));
-            //this.undo.used = false;
-            if (this.picknumber == null) {
-              this.undo.hideme = !this.undo.hideme;
-            }
-            this.count = this.count - 1;
-            this.allowUndo = false;
-            this.turnIndex = this.turnIndex - 1;
-            this.handleTurn();
-            this.undoResults();
-          }
+          this.undoRepeats();
         }
         break;
     }
   }
   presentConfirm() {
+    //menu to give user one last chance to undo a selection before moving to results
     let alert = this.alertCtrl.create({
       title: 'Confirm Selection',
       message: '',
@@ -272,6 +179,7 @@ export class DefaultPage {
           text: 'Undo',
           role: 'undo',
           handler: () => {
+            //call the undo function to restore the element
             this.restoreElement();
           }
         },
@@ -279,7 +187,7 @@ export class DefaultPage {
           text: 'Confirm',
           handler: () => {
             this.allowUndo = false;
-            this.navCtrl.push(ResultsPage, {results:this.results});
+            this.navCtrl.push(ResultsPage, { results: this.results });
           }
         }
       ]
@@ -287,6 +195,7 @@ export class DefaultPage {
     alert.present();
   }
   resetConfirm() {
+    //confirmation window for resetting the page
     let alert = this.alertCtrl.create({
       title: 'Reset?',
       message: '',
@@ -295,11 +204,13 @@ export class DefaultPage {
           text: 'No',
           role: 'no',
           handler: () => {
+            //run nothing and exit out of window
           }
         },
         {
           text: 'Yes',
           handler: () => {
+            //trigger reset function
             this.reset();
           }
         }
@@ -308,6 +219,7 @@ export class DefaultPage {
     alert.present();
   }
   checkTurn(stage) {
+    //check if the team is trying to select their own stage
     if (this.teamTurn == '1' && stage.team1Used === true) {
       return false;
     }
@@ -318,7 +230,122 @@ export class DefaultPage {
       return true;
     }
   }
+  undoUnique() {
+    //if banphase
+    if (this.pickphase == "ban") {
+      if (this.undo !== 0) {
+        this.stages.splice(this.undoIndex, 0, this.undo);//remove stage from the list
+      }
+      this.count = this.count - 1;
+      this.allowUndo = false;
+      this.undo.hideme = !this.undo.hideme;
+      //set turn back
+      this.turnIndex = this.turnIndex - 1;
+      this.handleTurn();
+    }
+    //if pickphase
+    else {
+      this.picknumber = this.prevChar(this.picknumber); //set pick number back from ex. "B" to "A"
+      this.undo.pickNum = null;                         //take away pickNum given
+      this.undo.phase = null;                           //??
+      this.undo.used = false;                           //flag item as unused
+      this.undo.hideme = !this.undo.hideme;             //flip the hidden text property to re-hide
+      this.count = this.count - 1;                      //reduce count of actions for determining pick/ban
+      this.allowUndo = false;                           //Don't allow another undo
+      this.turnIndex = this.turnIndex - 1;              //reset the index of whose turn it is.
+      this.handleTurn();                                //undo turn order
+      this.undoResults();
+    }
+  }
+  undoTeamUnique() {
+    //if banphase
+    if (this.pickphase == "ban") {
+      if (this.undo !== 0) {
+        this.stages.splice(this.undoIndex, 0, this.undo);
+      }
+      this.count = this.count - 1;
+      this.allowUndo = false;
+      //this.undo.hideme = !this.undo.hideme;
+      //set turn back
+      this.turnIndex = this.turnIndex - 1;
+      this.handleTurn();
+    }
+    //if pickphase
+    else {
+      //console.log(this.undo.hideme);
+      this.picknumber = this.prevChar(this.picknumber);
+      if (this.undo.pickNum.indexOf('1') !== -1 && this.undo.pickNum.indexOf('2') !== -1) {
+        this.undo.pickNum = this.turns[this.turnIndex];
+        if (this.undo.pickNum.indexOf('1') === -1) {
+          this.undo.team1Used = null;
+        }
+        if (this.undo.pickNum.indexOf('2') === -1) {
+          this.undo.team2Used = null;
+        }
+      }
+      else if (this.undo.pickNum.indexOf('1') !== -1) {
+        this.undo.pickNum = null;
+        this.undo.team1Used = null;
+        if (this.undo.pickNum == null) {
+          this.undo.hideme = !this.undo.hideme;
+        }
+      }
+      else if (this.undo.pickNum.indexOf('2') !== -1) {
+        this.undo.pickNum = null;
+        this.undo.team2Used = null;
+        if (this.undo.pickNum == null) {
+          this.undo.hideme = !this.undo.hideme;
+        }
+      }
+      else {
+        console.log('I shouldn\'t be here, ever');
+        this.undo.pickNum = null;
+        if (this.undo.pickNum == null) {
+          this.undo.hideme = !this.undo.hideme;
+        }
+      }
+      this.count = this.count - 1;
+      this.allowUndo = false;
+      //this.undo.phase = null;                       
+      this.undo.used = false;
+      this.turnIndex = this.turnIndex - 1;
+      //console.log(this.undo.hideme);
+      this.handleTurn();
+      this.undoResults();
+    }
+  }
+  undoRepeats() {
+    //if banphase
+    if (this.pickphase == "ban") {
+      if (this.undo !== 0) {
+        //reinsert the deleted item into the stage list
+        this.stages.splice(this.undoIndex, 0, this.undo);
+      }
+      //this.undo.hideme = !this.undo.hideme;
+      this.count = this.count - 1;//decrement pick/ban phase counter
+      this.allowUndo = false;
+      //set turn back
+      this.turnIndex = this.turnIndex - 1; //decrement the index selecting turns
+      this.handleTurn();
+    }
+    //if pickphase
+    else {
+      //return all the variables back to the default state
+      this.picknumber = this.prevChar(this.picknumber);
+      this.undo.pickNum = this.undo.pickNum.substring(0, this.undo.pickNum.indexOf(this.picknumber));
+      //this.undo.used = false;
+      if (this.picknumber == null) {
+        this.undo.hideme = !this.undo.hideme;
+      }
+      this.count = this.count - 1;
+      this.allowUndo = false;
+      this.turnIndex = this.turnIndex - 1;
+      this.handleTurn();
+      this.undoResults();
+    }
+  }
   pickBanTurn() {
+    //once 2 bans are made switch to pickphase
     if (this.count > 2) {
       this.pickphase = "pick";
     }
@@ -327,12 +354,15 @@ export class DefaultPage {
     this.stages.splice(index, 1);
   }
   addToResults(stage) {
+    //add most stage item click to the results
     this.results.push(stage);
   }
-  undoResults(){
+  undoResults() {
+    //pop the most recent item added to the results object
     this.results.pop();
   }
   phase(phase) {
+    //check to see if the page is set to pick
     if (phase === "pick") {
       return true;
     }
@@ -344,23 +374,9 @@ export class DefaultPage {
     return String.fromCharCode(c.charCodeAt(0) - 1);
   }
   outOfBounds(p) {
-    /*switch (this.picklimit) {
-      case '2':
-        if (p > "D") {
-          return true;
-        }
-        else {
-          return false;
-        }
-      case '3':
-        if (p > "F") {
-          return true;
-        }
-        else {
-          return false;
-        }
-    }*/
-    if(this.picklimit == 2){
+    //If the pick couter goes over the limit retrurn false
+    //refactor with a more generic variable??
+    if (this.picklimit == 2) {
       if (p > "D") {
         return true;
       }
@@ -368,7 +384,7 @@ export class DefaultPage {
         return false;
       }
     }
-    else if(this.picklimit == 3){
+    else if (this.picklimit == 3) {
       if (p > "F") {
         return true;
       }
@@ -378,21 +394,16 @@ export class DefaultPage {
     }
   }
   reset() {
+    //refresh the webpage
     location.reload();
   }
-  used(stage) {
-    if (stage.used) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
   teamUsed(stage) {
+    //if the team has used the stage, do not allow them to reselect
     return (this.teamTurn == '1' && stage.team1Used === true) ||
-       (this.teamTurn =='2' && stage.team2Used === true)
+      (this.teamTurn == '2' && stage.team2Used === true)
   }
-  handleTurn() { //sets the html display variable
+  handleTurn() {
+    //sets the html display variable
     this.turns[this.turnIndex] == "1" ? this.teamTurn = 1 : this.teamTurn = 2
   }
 }
