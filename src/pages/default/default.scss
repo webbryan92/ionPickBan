@@ -15,7 +15,7 @@ page-default{
         background: lightgrey;
         height: 200px;
         border-radius: 10px;
-        font-size: 14px;
+        font-size: 12px;
         @media screen and (max-width: $break-small) {
             height: 150px;
             padding: 5px, 5px, 5px, 0px;
@@ -26,11 +26,25 @@ page-default{
             height: 250px;
             padding: 5px, 5px, 5px, 0px;
             margin: 2px;
+            font-size: 14px;
+        }
+    }
+    button {
+        @media screen and (max-width: $break-small) {
+            width: 50%;
         }
     }    
-    .stagename {
-        padding: 0px;
-        margin: 0px;
+    .stagename{
+        margin-top: 4px;
+        margin-bottom: 4px;
+        @media screen and (max-width: $break-small) {
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        @media screen and (min-width: $break-large) {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     }
     .stageimg {
         margin-bottom: 0px;
@@ -73,6 +87,10 @@ page-default{
         box-shadow: 1px 1px 8px #AAAAAA;
         color: rgb(28, 9, 97);
         text-shadow: 1px 1px 2px #AAAAAA;
+        @media screen and (max-width: $break-small){
+            width: 33%;
+            font-size: 16px;
+        }
     }
     .content h1 .t2 {
         background: lightgrey;
@@ -83,6 +101,10 @@ page-default{
         box-shadow: 1px 1px 8px #AAAAAA;
         color: rgb(87, 11, 11);
         text-shadow: 1px 1px 2px #AAAAAA;
+        @media screen and (max-width: $break-small){
+            width: 33%;
+            font-size: 16px;
+        }
     }
     img {
         align-self: center;
