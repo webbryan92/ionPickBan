@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content padding class="content">
-  <h1 align="center">Results</h1>
+  <!-- <h1 align="center">Results</h1> -->
   <ion-grid>
     <ion-row justify-content-center>
       <ng-container *ngFor="let stage of stages; let i = index">
@@ -21,7 +21,7 @@
             <div>
               <img width="128" height="128" src="{{stage.imgsrc}}" onerror="this.src = `assets/imgs/error.png`" class="stageimg">
             </div>
-            <figcaption [hidden]="!stage.hideme" align="center" class="pickformat">{{stage.pickNum}}</figcaption>
+            <figcaption [hidden]="!stage.hideme" align="center" class="pickformat">{{i+1}}</figcaption>
           </figure>
           <ng-container>
             <p class="stagename">{{stage.name}}</p>
