@@ -6,4 +6,3 @@
 	then nagivate to localhost:8100 in a web browser to see the project
 
 4. 	If its still not working run "ionic state restore" in the project directory.
-
