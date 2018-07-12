@@ -39,8 +39,8 @@ export const STAGES: Stage[] = [
     },
     { 
         stageId: 6,
-        name: 'Abandoned Colony (Near Earth)',
-        jpname: '廃棄コロニー(地球近辺)',
+        name: 'Abandoned Colony',
+        jpname: '廃棄コロニー',
         imgsrc: 'assets/imgs/aColony.png'
     },
     { 

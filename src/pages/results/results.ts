@@ -24,7 +24,8 @@ export class ResultsPage {
     splitStages(stages) {
         this.randomized = stages.splice(-2, 2);
         this.shuffleArray(this.randomized);
-        this.stages = this.stages.concat(this.randomized)
+        this.stages = this.stages.concat(this.randomized);
+        this.stages.pop();
     }
     // -> Fisher–Yates shuffle algorithm
     shuffleArray(array) {

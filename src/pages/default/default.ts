@@ -44,7 +44,7 @@ export class DefaultPage {
     this.category = localStorage.getItem('category') || 'unique';
     this.picklimit = localStorage.getItem('picklimit') || 2;
   }
-  //handle click on any of the 
+  //handle click event on a stage
   handleClick(stage, index) {
     switch (this.category) {
       case 'unique':
