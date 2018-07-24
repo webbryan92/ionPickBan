@@ -51,19 +51,22 @@ export class DefaultPage {
       case 'unique':
         //don't allow duplicate picks or more than specified
         if (!this.outOfBounds(this.picknumber) && !stage.used) {
-          //set forward the counters, and enable undoing
+          //advance counters
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
           stage.phase = this.pickphase;
           if (stage.phase === "ban") {
+            //store the stage object to allow undo and remove
             this.undo = stage;
             this.removeItem(stage, index);
             this.undoIndex = index;
           } else {
+            //modify the stage object with the turn number
             stage.pickNum = this.picknumber;
             this.picknumber = this.nextChar(this.picknumber);
             stage.used = true;
+            //add stage object to the undo to be acted upon
             this.undo = stage;
             this.undoIndex = index;
             this.addToResults(stage);
@@ -73,22 +76,27 @@ export class DefaultPage {
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
           if (this.outOfBounds(this.picknumber)) {
+            //alert user when you've selected all stages for confirmation
             this.presentConfirm();
           }
         }
         break;
       case 'teamUnique':
+      //don't allow teams to select duplicates or out of bounds
         if (!this.outOfBounds(this.picknumber) && !this.teamUsed(stage)) {
+          //advance counters
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
           stage.phase = this.pickphase;
           if (stage.phase === "ban") {
+            //store the stage object to allow undo and remove
             this.undo = stage;
             this.removeItem(stage, index);
             this.undoIndex = index;
           }
           else if (this.checkTurn(stage)) {
+            //modify the stage object with the team that selected it
             if (stage.pickNum == null) {
               stage.pickNum = this.teamTurn.toString();
               stage.hideme = !stage.hideme;
@@ -97,12 +105,14 @@ export class DefaultPage {
               stage.pickNum = stage.pickNum + ' ' + this.teamTurn;
             }
             this.picknumber = this.nextChar(this.picknumber);
+            //flag the object with the team that used it
             if (this.teamTurn == '1') {
               stage.team1Used = true;
             }
             if (this.teamTurn == '2') {
               stage.team2Used = true;
             }
+            //add stage object to the undo to be held for undo functionality
             this.undo = stage;
             this.undoIndex = index;
             this.addToResults(stage);
@@ -110,6 +120,7 @@ export class DefaultPage {
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
           if (this.outOfBounds(this.picknumber)) {
+            //alert user when you've selected all stages for confirmation
             this.presentConfirm();
           }
         }
@@ -117,26 +128,27 @@ export class DefaultPage {
       case 'repeats':
       //check if the number is out of bounds
         if (!this.outOfBounds(this.picknumber)) {
+          //advance counters
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
           stage.phase = this.pickphase;
           if (stage.phase === "ban") {
+            //store the stage object to allow undo and remove
             this.undo = stage;
             this.removeItem(stage, index);
             this.undoIndex = index;
           } else {
+            //add the team that selects the stage, or concatenate it to the list
             if (stage.pickNum == null) {
               stage.pickNum = this.picknumber;
               this.picknumber = this.nextChar(this.picknumber);
               stage.hideme = !stage.hideme;
             } else {
-              //the updates on the addition to the html property 
-              //has response time issues
               stage.pickNum = stage.pickNum + ' ' + this.picknumber;
               this.picknumber = this.nextChar(this.picknumber);
             }
-            //stage.used = true;
+            //add stage to the undo object
             this.undo = stage;
             this.undoIndex = index;
             this.addToResults(stage);
@@ -145,12 +157,12 @@ export class DefaultPage {
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
           if (this.outOfBounds(this.picknumber)) {
+            //alert user when you've selected all stages for confirmation
             this.presentConfirm();
           }
         }
         break;
     }
-
   }
   restoreElement() {
     switch (this.category) {
