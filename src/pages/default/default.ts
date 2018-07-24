@@ -46,9 +46,12 @@ export class DefaultPage {
   }
   //handle click event on a stage
   handleClick(stage, index) {
+    //selection mode determines what code to run
     switch (this.category) {
       case 'unique':
+        //don't allow duplicate picks or more than specified
         if (!this.outOfBounds(this.picknumber) && !stage.used) {
+          //set forward the counters, and enable undoing
           this.allowUndo = true;
           this.count = this.count + 1;
           this.pickBanTurn();
@@ -103,7 +106,7 @@ export class DefaultPage {
             this.undo = stage;
             this.undoIndex = index;
             this.addToResults(stage);
-          }//switch team
+          }
           this.turnIndex = this.turnIndex + 1;
           this.handleTurn();
           if (this.outOfBounds(this.picknumber)) {
@@ -354,7 +357,7 @@ export class DefaultPage {
     this.stages.splice(index, 1);
   }
   addToResults(stage) {
-    //add most stage item click to the results
+    //add stage item click to the results
     this.results.push(stage);
   }
   undoResults() {
